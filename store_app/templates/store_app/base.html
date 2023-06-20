@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- tailwind css -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- my navbar + nav dropdown -->
+    <script src="../../static/store_app/js/navbar.js"></script>
+    <!-- jquery minified -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <!-- stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+
+    {% block extra_head %}
+
+    {% endblock extra_head %}
+
+
+    <script src="https://unpkg.com/@themesberg/flowbite@latest/dist/flowbite.bundle.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'store_app/css/style.css' %}">
+    <title>DIGITAL-ART{% block head_title %}{% endblock %}</title>
+</head>
+
+
+<body>
+
+    {% comment %}
+    {% endcomment %}
+    {% include 'store_app/components/navbar.html' %}
+
+
+
+    <div class="">
+        {% block content %}{% endblock content %}
+    </div>
+
+    {% block extra_body %}
+    {% endblock extra_body %}
+
+</body>
+
+</html>
+
+</html>

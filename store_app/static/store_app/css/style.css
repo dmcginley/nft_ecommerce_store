@@ -1,0 +1,21 @@
+html, body {
+    /* background-color: rgb(33, 33, 36); */
+}
+.hidden{
+    display: none;
+    /* background-color: aqua; */
+}
+
+
+.card {
+    /* background-color: aqua !important; */
+    /* box-shadow: 20px 20px rgb(0, 209, 157) !important; */
+}
+
+.card:hover {
+    translate: 0px -10px;
+    transition: 200ms;
+    transform: scale(1.05);
+    
+
+}

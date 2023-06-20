@@ -1,0 +1,40 @@
+{% extends 'store_app/base.html' %}
+
+{% block extra_head %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock extra_head %}
+
+{% block head_title %} : {{ page_title }}{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="max-w-screen-2xl mx-auto grid md:grid-cols-2 gap-4 pt-20 px-4">
+    {% for product in products %}
+    <section class="flex justify-center">
+        <div class="product max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+            <a href="#">
+                <img class="rounded-t-lg w-96 h-56 object-cover" src="{{ product.image.url }}" alt="" />
+            </a>
+            <div class="p-4">
+                <div class="description pb-4">
+                    <h5 class="text-2xl font-bold tracking-tight text-slate-800">{{ product.title }}
+                    </h5>
+                    <p class="mb-2 tracking-tight text-slate-800">{{ product.description }}
+                    </p>
+                    <h5>${{ product.price }}</h5>
+                </div>
+                <form action="/create-checkout-session" method="POST">
+                    <button
+                        class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-800 hover:border-fuchsia-600 rounded">
+                        Add to Cart
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+{% endblock content %}
