@@ -1,0 +1,62 @@
+{% load static %}
+
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block extra_head %}
+  {% endblock %}
+
+
+
+  <!-- tailwind css -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- my navbar + nav dropdown -->
+  <script src="../../static/store_app/js/navbar.js"></script>
+  <script src="https://unpkg.com/@themesberg/flowbite@latest/dist/flowbite.bundle.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'store_app/css/style.css' %}">
+
+
+
+  <title>{% block head_title %}{% endblock %}</title>
+</head>
+
+<body>
+  {% block body %}
+
+  {% if messages %}
+  <div>
+    <strong>{% trans "Messages:" %}</strong>
+    <ul>
+      {% for message in messages %}
+      <li>{{message}}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  {% include 'store_app/components/navbar.html' %}
+
+  <!-- <div>
+    <strong>{% trans "Menu:" %}</strong>
+    <ul>
+      {% if user.is_authenticated %}
+      <li><a href="{% url 'account_email' %}">{% trans "Change E-mail" %}</a></li>
+      <li><a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a></li>
+      {% else %}
+      <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
+      <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
+      {% endif %}
+    </ul>
+  </div> -->
+  {% block content %}
+  {% endblock %}
+  {% endblock %}
+  {% block extra_body %}
+  {% endblock %}
+</body>
+
+</html>

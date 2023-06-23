@@ -41,6 +41,16 @@ INSTALLED_APPS = [
     'store_app.apps.StoreAppConfig',
     'profile_app.apps.ProfileAppConfig',
     'cart_app.apps.CartAppConfig',
+    # 'storages',
+    # 'django.contrib.sites',
+
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.github',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +68,10 @@ ROOT_URLCONF = 'nft_ecommerce_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, "templates", "allauth"),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +87,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nft_ecommerce_store.wsgi.application'
+
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = False
+ACCOUNT_USERNAME_MIN_LENGTH = 3
+# ACCOUNT_USERNAME_REQUIRED = False        # Defaults to True
+# LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+
+
+SITE_ID = 1
 
 
 # Database
@@ -128,7 +161,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-# SITE_ID = 2
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

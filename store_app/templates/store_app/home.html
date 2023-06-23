@@ -26,7 +26,19 @@
                     <h5>${{ product.price }}</h5>
                 </div>
                 <form action="/create-checkout-session" method="POST">
-                    <button
+                    {% csrf_token %}
+                    <div class="pt-2 pb-4">
+                        <label for="select">Qty</label>
+                        <select id="select"
+                            class="mt-2 bg-white border border-gray-300 text-gray-800 rounded-md focus:ring-fuchsia-500 focus:border-fuchsia-500 block py-2 px-3">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="add-button" value="{{ product.id }}"
                         class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-800 hover:border-fuchsia-600 rounded">
                         Add to Cart
                     </button>
@@ -36,5 +48,30 @@
     </section>
     {% endfor %}
 </div>
+
+
+
+<script>
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        console.log($('#select option:selected').val())
+        $.ajax({
+            type: 'POST',
+            url: '{% url "cart:cart_add" %}',
+            data: {
+                productid: $('#add-button').val(),
+                productqty: $('#select').val(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: "post"
+            },
+            success: function (jason) {
+                console.log(jason)
+                document.getElementById("cart-qty").innerHTML = jason.qty
+            },
+            error: function (xhr, errmsg, err) { }
+
+        });
+    })
+</script>
 
 {% endblock content %}

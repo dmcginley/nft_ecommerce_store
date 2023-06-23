@@ -26,6 +26,7 @@ urlpatterns = [
     path('profile/', include('profile_app.urls')),
     path('', include('store_app.urls', namespace='store')),
     path('cart/', include('cart_app.urls', namespace='cart')),
+    path('accounts/', include('allauth.urls')),
 ]
 
 # handler403 = "board_app.views.access_denied"
