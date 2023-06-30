@@ -5,6 +5,11 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return super(ProductManager, self).get_queryset().filter(is_active=True)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255, unique=True)
@@ -38,35 +43,25 @@ class Product(models.Model):
         Category, related_name='product', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     in_stock = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+
+    products = ProductManager()
 
     class Meta:
         ordering = ('-date_posted',)
 
-    def get_absolute_url(self):
-        return reverse('product_detail', kwargs={'slug': self.slug})
+    def __str__(self):
+        return self.title
 
-    def category_name(self):
-        all = []
-        for a in self.category.all():
-            all.append(str(a))
-        return "; ".join(all)
+    def get_absolute_url(self):
+        return reverse('store:product_detail', kwargs={'slug': self.slug})
+    # def category_name(self):
+    #     all = []
+    #     for a in self.category.all():
+    #         all.append(str(a))
+    #     return "; ".join(all)
 
     def save(self, *args, **kwargs):  # new
         if not self.slug:
             self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-
-#     def get_display_price(self):
-#         return "{0:.2f}".format(self.price / 100)
-
-
-# class Price(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     stripe_price_id = models.CharField(max_length=100)
-#     price = models.IntegerField(default=0)  # cents
-
-#     def get_display_price(self):
-#         return "{0:.2f}".format(self.price / 100)

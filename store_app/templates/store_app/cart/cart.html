@@ -11,14 +11,135 @@
 {% block content %}
 
 
-<div class="max-w-screen-2xl mx-auto grid md:grid-cols-2 gap-4 pt-20 px-4">
-    <section class="flex justify-center">
+<div class="mx-auto flex justify-center pt-32 ">
+    <div class="w-full md:w-2/3 2xl:w-1/2 px-4">
+        <h4 class="text-4xl mb-8">My Cart</h4>
+        <ul role="list" class="">
+            {% for item in cart %}
+            {% with product=item.product %}
+            <li data-index="{{product.id}}" class="product-item py-4 md:py-6 border-b border-gray-300">
+                <div class="flex space-x-4">
+                    <a href="{{ product.get_absolute_url }}">
+                        <img class="rounded object-cover  w-24" src="{{product.image.url}}" alt="" />
+                    </a>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="mb-2 text-3xl font-bold tracking-tight text-gray-900">
+                            {{product.title}}
+                        </h4>
+                        <!-- <p class="">Quantity: {{item.qty}}</p> -->
+                        <form id="checkout-form" action="/create-checkout-session" method="POST">
+                            <div class="flex">
+                                <div class="w-24">
+                                    <label for="select">Qty</label>
+                                    <select id="select{{product.id}}"
+                                        class="mt-2 bg-white border border-gray-300 text-gray-800 rounded-md focus:ring-fuchsia-500 focus:border-fuchsia-500 block py-2 px-3">
+                                        <option selected>{{item.qty}}</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-end text-gray-600 text-3xl">
+                                    <button type="button" id="update-button" value="{{product.id}}"
+                                        data-index="{{ product.id }}"
+                                        class="update-button text-base text-slate-500 hover:text-fuchsia-500">Update</button>
+                                    <button type="button" id="delete-button" value="{{product.id}}"
+                                        data-index="{{ product.id }}"
+                                        class="delete-button ml-4 text-base text-slate-500 hover:text-fuchsia-500">Delete</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="flex items-end text-gray-900">
+                        <div>
+                            <!-- <p>Price: <strong>€{{item.price}}</strong></p>
+                            <p>Sub-total: <strong>€{{item.total_price}}</strong></p> -->
+                            <p id="total">Price: <strong>€{{item.price}}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% endwith %}
+            {% endfor %}
+        </ul>
+        <div class="flex flex-row-reverse mt-6">
+            <div class="text-end">
 
+                <h4>Sub-total: <strong>€<span id="subtotal" class="subtotal">{{ cart.get_total_price }}</span></strong>
+                </h4>
 
-        <h4>My Cart</h4>
-
-
-    </section>
+                <form action="POST">
+                    {% csrf_token %}
+                    <button type="button"
+                        class=" min-w-full block mt-10 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold px-8 py-2  border-b-4 border-fuchsia-800 hover:border-fuchsia-600 rounded">
+                        Checkout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- script -->
+<script>
+    $(document).ready(function () {
+        $('.delete-button').click(function (e) {
+            e.preventDefault();
+            var productId = $(this).data('index');
+            var csrfToken = "{{ csrf_token }}";
+            $.ajax({
+                type: 'POST',
+                url: '{% url "cart:cart_delete" %}',
+                data: {
+                    productid: productId,
+                    csrfmiddlewaretoken: csrfToken,
+                    action: "post"
+                },
+                success: function (json) {
+                    $('.product-item[data-index="' + productId + '"]').remove();
+                    document.getElementById('subtotal').innerHTML = json.subtotal
+                    document.getElementById('cart-qty').innerHTML = json.qty
+
+                    //    console.log(json);
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log(errmsg);
+                }
+            });
+        });
+        // update item
+        $('.update-button').click(function (e) {
+            e.preventDefault();
+            var productId = $(this).data('index');
+            var productQty = $('#select' + productId + ' option:selected').val();
+
+            var csrfToken = "{{ csrf_token }}";
+            $.ajax({
+                type: 'POST',
+                url: '{% url "cart:cart_update" %}',
+                data: {
+                    productid: productId,
+                    productqty: productQty,
+                    csrfmiddlewaretoken: csrfToken,
+                    action: "post"
+                },
+                success: function (json) {
+                    document.getElementById('cart-qty').innerHTML = json.qty
+                    document.getElementById('subtotal').innerHTML = json.subtotal
+                    //document.getElementById('total').innerHTML = json.total
+                    //document.getElementsByClassName('subtotal').innerHTML = json.subtotal
+                    //            $('.product-item[data-index="' + productId + '"]').remove();
+                    //    console.log(json);
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log(errmsg);
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock content %}

@@ -14,23 +14,43 @@
     {% for product in products %}
     <section class="flex justify-center">
         <div class="product max-w-sm bg-white border border-gray-200 rounded-lg shadow">
-            <a href="#">
+            <a href="{{ product.get_absolute_url }}">
                 <img class="rounded-t-lg w-96 h-56 object-cover" src="{{ product.image.url }}" alt="" />
             </a>
             <div class="p-4">
                 <div class="description pb-4">
                     <h5 class="text-2xl font-bold tracking-tight text-slate-800">{{ product.title }}
                     </h5>
-                    <p class="mb-2 tracking-tight text-slate-800">{{ product.description }}
-                    </p>
-                    <h5>${{ product.price }}</h5>
+                    <div class="mb-5 md:mb-0 text-slate-600">
+                        <p class="mb-2 tracking-tight">{{ product.description }}</p>
+
+                        <p class="text-sm mt-12 mb-4">
+                            <strong>Artist:</strong>
+                            <span>{{product.author}}</span>
+                        </p>
+                        <h5 class="text-slate-800 text-xl">€{{ product.price }}</h5>
+                    </div>
                 </div>
-                <form action="/create-checkout-session" method="POST">
-                    <button
-                        class="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-800 hover:border-fuchsia-600 rounded">
+                <!-- <form id="checkout-form" action="/create-checkout-session" method="POST">
+                    <div class="flex">
+                        <div class="w-24">
+                            <label for="select">Qty</label>
+                            <select id="select" data-index="product.id"
+                                class="select mt-2 bg-white border border-gray-300 text-gray-800 rounded-md focus:ring-fuchsia-500 focus:border-fuchsia-500 block py-2 px-3">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" id="update-button" value="{{product.id}}" data-index="{{ product.id }}"
+                        class="add-button mt-6 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-800 hover:border-fuchsia-600 rounded">
                         Add to Cart
                     </button>
-                </form>
+                </form> -->
             </div>
         </div>
     </section>

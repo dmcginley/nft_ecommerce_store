@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <!-- stripe -->
-    <script src="https://js.stripe.com/v3/"></script>
+    <!-- <script src="https://js.stripe.com/v3/"></script> -->
 
 
     {% block extra_head %}
@@ -44,6 +44,36 @@
 
     {% block extra_body %}
     {% endblock extra_body %}
+
+    <script>
+        $(document).ready(function () {
+            $('.add-button').click(function (e) {
+                e.preventDefault();
+                var productId = $(this).data('index');
+                //var productQty = $("#select" + productId + "option:selected").val();
+                var productQty = $('#select option:selected').val();
+                var csrfToken = "{{ csrf_token }}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "cart:cart_add" %}',
+                    data: {
+                        productid: productId,
+                        productqty: productQty,
+                        csrfmiddlewaretoken: csrfToken,
+                        action: "post"
+                    },
+                    success: function (json) {
+                        $('#cart-qty').html(json.qty);
+                        console.log(json);
+                    },
+                    error: function (xhr, errmsg, err) {
+                        console.log(errmsg);
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

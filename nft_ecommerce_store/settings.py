@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     # 'storages',
     # 'django.contrib.sites',
 
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
